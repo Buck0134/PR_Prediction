@@ -195,7 +195,7 @@ class DataCleaner:
         self.drop_columns_with_excessive_missing_data()
         self.drop_rows_with_missing_ci_exists()
         self.pre_process()
-        for key, value in  tqdm(self.conditions.items(),total=len(self.conditions.keys()), desc=f"Processing Data with pre/post conditions for data consistency..."):
+        for key, value in tqdm(self.conditions.items(),total=len(self.conditions.keys()), desc=f"Processing Data with pre/post conditions for data consistency..."):
             self.apply_pre_post_conditions(key, value)
         return self.df
 
