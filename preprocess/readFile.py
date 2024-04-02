@@ -33,6 +33,14 @@ class DataCleaner:
     def df_head(self, n=5):
         pd.set_option("display.max_rows", None)
         return self.df.head(n)
+    
+    def drop_rows_with_missing_ci_exists(self):
+        initial_shape = self.df.shape
+        self.df = self.df.dropna(subset=['ci_exists'])
+        final_shape = self.df.shape
+    
+        print(f"Rows dropped: {initial_shape[0] - final_shape[0]}")
+        print(f"New DataFrame shape: {final_shape}")
 
     # def pre_process(self):
     #     # Compute the boolean mask for NaN values in each row
@@ -211,6 +219,7 @@ class DataCleaner:
 
     def getDFPreprocessedData(self):
         self.drop_columns_with_excessive_missing_data()
+        self.drop_rows_with_missing_ci_exists()
         self.pre_process()
         for key, value in conditions.items():
             self.apply_pre_post_conditions(key, value)
@@ -234,6 +243,9 @@ print("After dropping columns, shape:", cleaner.df_shape())
 # === STEP 1 DONE =====
 print("Pre")
 # print(cleaner.df_head())
+print("dropping ci_exists rows")
+cleaner.drop_rows_with_missing_ci_exists()
+print("===========================================")
 print(cleaner.display_missing_data_percentage())
 print("Processing")
 cleaner.pre_process()
