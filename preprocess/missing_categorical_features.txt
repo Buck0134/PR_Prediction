@@ -1,0 +1,1 @@
+Before dropping columns, shape: (3281386, 101)

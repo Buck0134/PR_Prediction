@@ -1,0 +1,4 @@
+Before dropping columns, shape: (3281386, 101)
+Dropped columns with more than 50% missing data:
+['contrib_affiliation', 'inte_affiliation', 'bug_fix']
+After dropping columns, shape: (3281386, 98)
