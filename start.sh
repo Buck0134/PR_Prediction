@@ -33,5 +33,16 @@ fi
 
 echo "Your Data is Now Available"
 
+CLEAN_CSV_FILE="$DATA_DIR/processedData.csv"
+if [ ! -f "$CLEAN_CSV_FILE" ]; then
+    echo "$CLEAN_CSV_FILE does not exist. Processing..."
+    mkdir -p "$DATA_DIR"
+    cd preprocess
+    python3 process.py
+    cd ..
+fi
+
+echo "\033[32mCleaned Data is now available at $CLEAN_CSV_FILE\033[0m"
+
 echo "\033[32mYou can start the virtual env with the following command\033[0m"
 echo "\033[32msource myenv/bin/activate\033[0m"

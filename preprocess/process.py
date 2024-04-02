@@ -1,31 +1,25 @@
 import pandas as pd
 import numpy as np
-
-# TODO:
-# drop ci_exists
-# double check consistency
-
-conditions = {
-    "has_comments": ["perc_pos_emotion", "perc_neg_emotion", "first_response_time"],
-    "contrib_comment": ["perc_contrib_pos_emo", "perc_contrib_neg_emo"],
-    "inte_comment": ["perc_inte_neg_emo", "perc_inte_pos_emo"],
-    "ci_exists": ["ci_latency", "ci_failed_perc"],
-    "same_user": [
-        "same_country",
-        "same_affiliation",
-        "contrib_follow_integrator",
-        "open_diff",
-        "cons_diff",
-        "extra_diff",
-        "agree_diff",
-        "neur_diff",
-    ],
-}
-
-
+from tqdm import tqdm
 class DataCleaner:
     def __init__(self, file_path="../data/new_pullreq.csv"):
         self.df = pd.read_csv(file_path)
+        self.conditions = {
+            "has_comments": ["perc_pos_emotion", "perc_neg_emotion", "first_response_time"],
+            "contrib_comment": ["perc_contrib_pos_emo", "perc_contrib_neg_emo"],
+            "inte_comment": ["perc_inte_neg_emo", "perc_inte_pos_emo"],
+            "ci_exists": ["ci_latency", "ci_failed_perc"],
+            "same_user": [
+                "same_country",
+                "same_affiliation",
+                "contrib_follow_integrator",
+                "open_diff",
+                "cons_diff",
+                "extra_diff",
+                "agree_diff",
+                "neur_diff",
+            ],
+        }
 
     def df_shape(self):
         return self.df.shape
@@ -39,28 +33,8 @@ class DataCleaner:
         self.df = self.df.dropna(subset=['ci_exists'])
         final_shape = self.df.shape
     
-        print(f"Rows dropped: {initial_shape[0] - final_shape[0]}")
-        print(f"New DataFrame shape: {final_shape}")
-
-    # def pre_process(self):
-    #     # Compute the boolean mask for NaN values in each row
-    #     # numerical --> mean
-    #     # dummy --> Missing
-    #     # categorical data --> Mode
-    #     nan_mask = self.df.isnull().any(axis=1)
-
-    #     # Filter the DataFrame to get rows without any NaN values
-    #     clean_df = self.df[~nan_mask]
-
-    #     # Check if every row has non-NaN values
-    #     all_rows_are_complete = clean_df.shape[0] == self.df.shape[0]
-
-    #     if all_rows_are_complete:
-    #         print("All rows are complete.")
-    #     else:
-    #         print(
-    #             "Some rows contain NaN values and have been removed. Some of the missings values are recreated"
-    #         )
+        # print(f"Rows dropped: {initial_shape[0] - final_shape[0]}")
+        # print(f"New DataFrame shape: {final_shape}")
 
     def apply_pre_post_conditions(self, pre_condition_col, post_condition_cols):
         """
@@ -78,7 +52,7 @@ class DataCleaner:
             raise ValueError("post_condition_cols must be a list of column names")
 
         # Apply the precondition logic and update postcondition columns where necessary
-        for index, row in self.df.iterrows():
+        for index, row in tqdm(self.df.iterrows(), total=len(self.df), desc=f"Processing Rows for Precondition: {pre_condition_col}"):
             if (
                 not row[pre_condition_col]
                 or row[pre_condition_col] == 0
@@ -221,38 +195,49 @@ class DataCleaner:
         self.drop_columns_with_excessive_missing_data()
         self.drop_rows_with_missing_ci_exists()
         self.pre_process()
-        for key, value in conditions.items():
+        for key, value in  tqdm(self.conditions.items(),total=len(self.conditions.keys()), desc=f"Processing Data with pre/post conditions for data consistency..."):
             self.apply_pre_post_conditions(key, value)
         return self.df
 
     def createCSVPreProcessData(self, file_path = "../data/processedData.csv"):
+        self.getDFPreprocessedData()
+        print("Writing to CSV File")
         self.df.to_csv(file_path, index=False)
         print(f"DataFrame exported to {file_path}.")
+        print("\n")
 
 
 # Example usage:
 cleaner = DataCleaner()
-# false_count = (cleaner.df["has_comments"] == False).sum()
-# total_count = len(cleaner.df["has_comments"])
-# percentage_false = (false_count / total_count) * 100
-# print(f"Percentage of False values: {percentage_false}%")
-# print("Before dropping columns, shape:", cleaner.df_shape())
-# === STEP 1 - Drop Columns =====
-cleaner.drop_columns_with_excessive_missing_data()
-print("After dropping columns, shape:", cleaner.df_shape())
-# === STEP 1 DONE =====
-print("Pre")
-# print(cleaner.df_head())
-print("dropping ci_exists rows")
-cleaner.drop_rows_with_missing_ci_exists()
-print("===========================================")
-print(cleaner.display_missing_data_percentage())
-print("Processing")
-cleaner.pre_process()
-# cleaner.apply_pre_post_conditions("ci_exists", ["ci_latency", "ci_failed_perc"])
-for key, value in conditions.items():
-    cleaner.apply_pre_post_conditions(key, value)
-print("Conditions check done")
-print("After")
-# print(cleaner.df_head())
-print(cleaner.display_missing_data_percentage())
+
+# to return processed dataframe
+# cleaner.getDFPreprocessedData()
+
+# to save the processed data in a CSV
+cleaner.createCSVPreProcessData()
+
+
+# # false_count = (cleaner.df["has_comments"] == False).sum()
+# # total_count = len(cleaner.df["has_comments"])
+# # percentage_false = (false_count / total_count) * 100
+# # print(f"Percentage of False values: {percentage_false}%")
+# # print("Before dropping columns, shape:", cleaner.df_shape())
+# # === STEP 1 - Drop Columns =====
+# cleaner.drop_columns_with_excessive_missing_data()
+# print("After dropping columns, shape:", cleaner.df_shape())
+# # === STEP 1 DONE =====
+# print("Pre")
+# # print(cleaner.df_head())
+# print("dropping ci_exists rows")
+# cleaner.drop_rows_with_missing_ci_exists()
+# print("===========================================")
+# print(cleaner.display_missing_data_percentage())
+# print("Processing")
+# cleaner.pre_process()
+# # cleaner.apply_pre_post_conditions("ci_exists", ["ci_latency", "ci_failed_perc"])
+# for key, value in self.conditions.items():
+#     cleaner.apply_pre_post_conditions(key, value)
+# print("Conditions check done")
+# print("After")
+# # print(cleaner.df_head())
+# print(cleaner.display_missing_data_percentage())
