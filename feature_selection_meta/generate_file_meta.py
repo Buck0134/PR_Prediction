@@ -104,5 +104,5 @@ def generate_data_pso():
 
 
 if __name__ == "__main__":
-    # filter_data()
+    filter_data()
     generate_data_pso()

@@ -10,7 +10,7 @@ from joblib import dump
 
 def train_decision_tree(data_path):
     data = pd.read_csv(data_path)
-    print(data.columns)
+    # print(data.columns)
 
     # Prepare the feature matrix X and target vector y
     X = data.drop("merged_or_not", axis=1)
