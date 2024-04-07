@@ -9,12 +9,12 @@ jobs:
   predict:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3 # Ensure we're using the latest version
 
       - name: Get PR Details
         id: pr-details
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6 # Update to the latest version available
         with:
           script: |
             const pr = context.payload.pull_request;
@@ -30,9 +30,13 @@ jobs:
           result-encoding: string
 
       - name: Call PR Prediction Service
+        env:
+          TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
+          OWNER: ${{ steps.pr-details.outputs.owner }}
+          REPO: ${{ steps.pr-details.outputs.repo }}
+          DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
+          PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
         run: |
           curl -X POST https://pr-prediction.onrender.com/github/full_data \
-              -H "Content-Type: application/json" \
-              -d '{"token": "${{ secrets.PR_PREDICTION_TOKEN }}", "owner": "${{ steps.pr-details.outputs.owner }}", "repo": "${{ steps.pr-details.outputs.repo }}", "developer_username": "${{ steps.pr-details.outputs.developer_username }}", "pull_number": "${{ steps.pr-details.outputs.number }}"}'
-    
-
+               -H "Content-Type: application/json" \
+               -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
