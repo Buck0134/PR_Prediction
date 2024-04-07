@@ -94,6 +94,8 @@ def github_full_data():
     developer_username = data.get('developer_username')
     pull_number = data.get('pull_number')
 
+    print(data)
+
     headers = {"Authorization": f"token {github_token}"}
     base_url = f"https://api.github.com/repos/{owner}/{repo}"
 
