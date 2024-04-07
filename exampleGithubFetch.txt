@@ -4,7 +4,7 @@ buckyy@Buckys-MBP-4 ~ % curl -X POST http://localhost:5001/github/full_data \
 {
   "closed_prs": [
     {
-      "_links": {
+      "_links": { 
         "comments": {
           "href": "https://api.github.com/repos/Buck0134/PR_Prediction/issues/1/comments"
         },
