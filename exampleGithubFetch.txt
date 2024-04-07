@@ -1,6 +1,7 @@
 buckyy@Buckys-MBP-4 ~ % curl -X POST http://localhost:5001/github/full_data \
      -H "Content-Type: application/json" \
      -d '{"token": "_", "owner": "Buck0134", "repo": "PR_Prediction", "developer_username": "Buck0134", "pull_number": 1}'
+
 {
   "closed_prs": [
     {
