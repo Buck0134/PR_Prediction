@@ -378,45 +378,45 @@ def github_full_data():
         print("Failed to fetch PR comments")
         finalized_data['has_comments'] = 'error'
     
-    # T. other_comment
-    commenters = set()
+    # # T. other_comment
+    # commenters = set()
 
-    # Function to perform GET requests and check status code
-    def get_json(url):
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Failed to fetch data from {url}, status code: {response.status_code}")
-            return None
+    # # Function to perform GET requests and check status code
+    # def get_json(url):
+    #     response = requests.get(url, headers=headers)
+    #     if response.status_code == 200:
+    #         return response.json()
+    #     else:
+    #         print(f"Failed to fetch data from {url}, status code: {response.status_code}")
+    #         return None
 
-    # Fetch PR issue comments
-    issue_comments_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{pull_number}/comments"
-    issue_comments = get_json(issue_comments_url)
-    if issue_comments is None:
-        return 'error: failed to fetch issue comments'
-    for comment in issue_comments:
-        commenters.add(comment['user']['login'])
+    # # Fetch PR issue comments
+    # issue_comments_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{pull_number}/comments"
+    # issue_comments = get_json(issue_comments_url)
+    # if issue_comments is None:
+    #     return 'error: failed to fetch issue comments'
+    # for comment in issue_comments:
+    #     commenters.add(comment['user']['login'])
 
-    # Fetch PR review comments
-    review_comments_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/comments"
-    review_comments = get_json(review_comments_url)
-    if review_comments is None:
-        return 'error: failed to fetch review comments'
-    for comment in review_comments:
-        commenters.add(comment['user']['login'])
+    # # Fetch PR review comments
+    # review_comments_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/comments"
+    # review_comments = get_json(review_comments_url)
+    # if review_comments is None:
+    #     return 'error: failed to fetch review comments'
+    # for comment in review_comments:
+    #     commenters.add(comment['user']['login'])
 
-    # Fetch repository contributors
-    contributors_url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
-    contributors = get_json(contributors_url)
-    if contributors is None:
-        return 'error: failed to fetch contributors'
-    contributor_logins = {contributor['login'] for contributor in contributors}
+    # # Fetch repository contributors
+    # contributors_url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
+    # contributors = get_json(contributors_url)
+    # if contributors is None:
+    #     return 'error: failed to fetch contributors'
+    # contributor_logins = {contributor['login'] for contributor in contributors}
 
-    # Check for non-contributor comments
-    non_contributor_comments = commenters - contributor_logins
+    # # Check for non-contributor comments
+    # non_contributor_comments = commenters - contributor_logins
 
-    finalized_data['other_comment'] = 'yes' if non_contributor_comments else 'no'
+    # finalized_data['other_comment'] = 'yes' if non_contributor_comments else 'no'
     
     # Starting GA: 
     # U. project_age
