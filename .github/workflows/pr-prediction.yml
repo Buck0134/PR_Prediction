@@ -1,0 +1,36 @@
+name: PR Prediction
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  predict:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get PR Details
+        id: pr-details
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            console.log(`Pull Request Number: ${pr.number}`);
+            console.log(`Repository Name: ${context.repo.repo}`);
+            console.log(`Developer Username: ${pr.user.login}`);
+            return {
+              number: pr.number,
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              developer_username: pr.user.login
+            }
+          result-encoding: string
+
+      - name: Call PR Prediction Service
+        run: |
+          curl -X POST https://pr-prediction.onrender.com/github/full_data \
+               -H "Content-Type: application/json" \
+               -d '{"token": "${{ secrets.PR_PREDICTION_TOKEN }}", "owner": "${{ fromJson(steps.pr-details.outputs.result).owner }}", "repo": "${{ fromJson(steps.pr-details.outputs.result).repo }}", "developer_username": "${{ fromJson(steps.pr-details.outputs.result).developer_username }}", "pull_number": "${{ fromJson(steps.pr-details.outputs.result).number }}"}'
