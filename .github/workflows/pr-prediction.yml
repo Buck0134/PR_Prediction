@@ -29,14 +29,14 @@ jobs:
             }
           result-encoding: string
 
-      # - name: Call PR Prediction Service
-      #   env:
-      #     TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
-      #     OWNER: ${{ steps.pr-details.outputs.owner }}
-      #     REPO: ${{ steps.pr-details.outputs.repo }}
-      #     DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
-      #     PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
-      #   run: |
-      #     curl -X POST https://pr-prediction.onrender.com/github/full_data \
-      #          -H "Content-Type: application/json" \
-      #          -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
+      - name: Call PR Prediction Service
+        env:
+          TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
+          OWNER: ${{ steps.pr-details.outputs.owner }}
+          REPO: ${{ steps.pr-details.outputs.repo }}
+          DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
+          PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
+        run: |
+          curl -X POST https://pr-prediction.onrender.com/github/full_data \
+               -H "Content-Type: application/json" \
+               -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
