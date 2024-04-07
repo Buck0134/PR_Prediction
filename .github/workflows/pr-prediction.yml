@@ -32,6 +32,7 @@ jobs:
       - name: Call PR Prediction Service
         run: |
           curl -X POST https://pr-prediction.onrender.com/github/full_data \
-               -H "Content-Type: application/json" \
-               -d "{\"token\": \"${{ secrets.PR_PREDICTION_TOKEN }}\", \"owner\": \"${{ fromJson(steps.pr-details.outputs.result).owner }}\", \"repo\": \"${{ fromJson(steps.pr-details.outputs.result).repo }}\", \"developer_username\": \"${{ fromJson(steps.pr-details.outputs.result).developer_username }}\", \"pull_number\": \"${{ fromJson(steps.pr-details.outputs.result).number }}\"}"
+              -H "Content-Type: application/json" \
+              -d '{"token": "${{ secrets.PR_PREDICTION_TOKEN }}", "owner": "${{ steps.pr-details.outputs.owner }}", "repo": "${{ steps.pr-details.outputs.repo }}", "developer_username": "${{ steps.pr-details.outputs.developer_username }}", "pull_number": "${{ steps.pr-details.outputs.number }}"}'
+    
 
