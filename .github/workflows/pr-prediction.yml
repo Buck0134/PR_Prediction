@@ -1,0 +1,47 @@
+name: PR Prediction
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  predict:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3 # Ensure we're using the latest version
+
+      - name: Get PR Details
+        id: pr-details
+        uses: actions/github-script@v6 # Update to the latest version available
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            console.log(`Pull Request Number: ${pr.number}`);
+            console.log(`Repository Name: ${context.repo.repo}`);
+            console.log(`Developer Username: ${pr.user.login}`);
+            core.setOutput("number", pr.number);
+            core.setOutput("repo", context.repo.repo);
+            core.setOutput("owner", context.repo.owner);
+            core.setOutput("developer_username", pr.user.login);
+          result-encoding: string
+
+      # - name: Debug Outputs
+      #   run: |
+      #       echo "Pull Number: ${{ steps.pr-details.outputs.number }}"
+      #       echo "Repo: ${{ steps.pr-details.outputs.repo }}"
+      #       echo "Owner: ${{ steps.pr-details.outputs.owner }}"
+      #       echo "Developer Username: ${{ steps.pr-details.outputs.developer_username }}"
+        
+      - name: Call PR Prediction Service
+        env:
+          TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
+          OWNER: ${{ steps.pr-details.outputs.owner }}
+          REPO: ${{ steps.pr-details.outputs.repo }}
+          DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
+          PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
+        run: |
+          curl -X POST https://pr-prediction.onrender.com/github/full_data \
+               -H "Content-Type: application/json" \
+               -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
