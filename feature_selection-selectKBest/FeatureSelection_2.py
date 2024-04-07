@@ -18,16 +18,19 @@ class PullRequestPredictor:
         self.class_distribution = {}
 
     def preprocess(self):
-        columns_to_remove = ['test_cases_per_kloc', 'asserts_per_kloc', 'churn_addition', 'churn_deletion', 'at_tag', 
-                     'num_participants', 'num_comments_con', 'perc_external_contribs', 'social_strength', 
-                     'requester_succ_rate', 'fork_num', 'prior_interaction', 'part_num_code', 
-                     'num_code_comments_con', 'fork_num', 'ci_build_num', 'has_participants', 'core_comment', 
-                     'contrib_comment', 'inte_comment', 'has_exchange', 'contrib_country', 'contrib_first_emo', 
-                     'perc_contrib_neg_emo', 'contrib_first_emo', 'ci_test_passed', 'ci_first_build_status', 
-                     'ci_last_build_status', 'perc_contrib_pos_emo', 'perc_inte_neg_emo', 'perc_inte_pos_emo',
-                     'contrib_follow_integrator', 'same_country', 'same_affiliation', 'contrib_gender', 
-                     'contrib_country', 'id', 'creator_id', 'last_closer_id', 'last_close_time', 
-                     'language', 'same_user', 'open_diff', 'cons_diff', 'extra_diff', 'agree_diff', 'neur_diff', 'perc_neg_emotion', 'perc_pos_emotion']
+        # Remove columns as per your specification
+        columns_to_remove = ['project_id', 'test_cases_per_kloc', 'asserts_per_kloc', 'churn_addition', 'churn_deletion', 'at_tag', 
+                            'num_participants', 'num_comments_con', 'perc_external_contribs', 'social_strength', 
+                            'requester_succ_rate', 'fork_num', 'prior_interaction', 'part_num_code', 
+                            'num_code_comments_con', 'fork_num', 'ci_build_num', 'has_participants', 'core_comment', 
+                            'contrib_comment', 'inte_comment', 'has_exchange', 'contrib_country', 
+                            'perc_contrib_neg_emo', 'contrib_first_emo', 'ci_test_passed', 'ci_first_build_status', 
+                            'ci_last_build_status', 'perc_contrib_pos_emo', 'perc_inte_neg_emo', 'perc_inte_pos_emo',
+                            'contrib_follow_integrator', 'same_country', 'same_affiliation', 'contrib_gender', 
+                            'contrib_country', 'id', 'creator_id', 'last_closer_id', 'last_close_time', 
+                            'language', 'same_user', 'open_diff', 'cons_diff', 'extra_diff', 'agree_diff', 'neur_diff', 
+                            'perc_neg_emotion', 'perc_pos_emotion', 'core_member', 'contrib_open', 'contrib_neur', 'contrib_extra',
+                            'contrib_agree', 'inte_open', 'inte_cons', 'inte_extra', 'inte_agree', 'inte_neur', 'sloc', 'test_lines_per_kloc', 'asserts_per_kloc', 'integrator_availability']
         self.df.drop(columns=columns_to_remove, inplace=True, errors='ignore')
         
         self.categorical_features = [col for col in self.df.columns if self.df[col].dropna().isin([0, 1]).all() and col != 'merged_or_not' and col != 'project_id']
