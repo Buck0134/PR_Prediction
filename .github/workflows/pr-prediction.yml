@@ -21,14 +21,19 @@ jobs:
             console.log(`Pull Request Number: ${pr.number}`);
             console.log(`Repository Name: ${context.repo.repo}`);
             console.log(`Developer Username: ${pr.user.login}`);
-            return {
-              number: pr.number,
-              repo: context.repo.repo,
-              owner: context.repo.owner,
-              developer_username: pr.user.login
-            }
+            core.setOutput("number", pr.number);
+            core.setOutput("repo", context.repo.repo);
+            core.setOutput("owner", context.repo.owner);
+            core.setOutput("developer_username", pr.user.login);
           result-encoding: string
 
+      - name: Debug Outputs
+        run: |
+            echo "Pull Number: ${{ steps.pr-details.outputs.number }}"
+            echo "Repo: ${{ steps.pr-details.outputs.repo }}"
+            echo "Owner: ${{ steps.pr-details.outputs.owner }}"
+            echo "Developer Username: ${{ steps.pr-details.outputs.developer_username }}"
+        
       - name: Call PR Prediction Service
         env:
           TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
