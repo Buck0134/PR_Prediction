@@ -27,12 +27,12 @@ jobs:
             core.setOutput("developer_username", pr.user.login);
           result-encoding: string
 
-      - name: Debug Outputs
-        run: |
-            echo "Pull Number: ${{ steps.pr-details.outputs.number }}"
-            echo "Repo: ${{ steps.pr-details.outputs.repo }}"
-            echo "Owner: ${{ steps.pr-details.outputs.owner }}"
-            echo "Developer Username: ${{ steps.pr-details.outputs.developer_username }}"
+      # - name: Debug Outputs
+      #   run: |
+      #       echo "Pull Number: ${{ steps.pr-details.outputs.number }}"
+      #       echo "Repo: ${{ steps.pr-details.outputs.repo }}"
+      #       echo "Owner: ${{ steps.pr-details.outputs.owner }}"
+      #       echo "Developer Username: ${{ steps.pr-details.outputs.developer_username }}"
         
       - name: Call PR Prediction Service
         env:

@@ -123,8 +123,7 @@ def github_full_data():
         except ValueError:
             # Fallback if the response is not in JSON format or .json() parsing fails
             error_message += f". Response content: {pr_response.text[:100]}"  # Show first 100 characters of the response text as an example
-
-    finalized_data['is_first_pr'] = {"error": error_data}
+        finalized_data['is_first_pr'] = {"error": error_message}
 
     # B. Count the number of reviews made by the developer in this repository
     # Search Index Delay: GitHub's search results are based on a search index. According to GitHub's documentation, this index might not be immediately up-to-date, leading to a delay in reflecting recent activities like reviews.
