@@ -464,6 +464,7 @@ def github_full_data():
     # fetched_data['commits'] = commits_response.json() if commits_response.status_code == 200 else {"error": "Failed to fetch commits"}
 
     # # Return the fetched data as JSON
+    print(finalized_data)
     return jsonify(finalized_data)
 
 def get_user_review_count(github_token, developer_username):
