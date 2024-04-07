@@ -3,7 +3,7 @@ buckyy@Buckys-MBP-4 ~ % curl -X POST http://localhost:5001/github/full_data \
      -d '{"token": "_", "owner": "Buck0134", "repo": "PR_Prediction", "developer_username": "Buck0134", "pull_number": 1}'
 {
   "closed_prs": [
-    {
+    { 
       "_links": {
         "comments": {
           "href": "https://api.github.com/repos/Buck0134/PR_Prediction/issues/1/comments"
