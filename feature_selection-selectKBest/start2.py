@@ -14,9 +14,9 @@ results = []
 
 df_copy = pd.read_csv('../data/processedData.csv')
 
-for N in range(20, 9, -1):  # N from 20 to 10
-    print(f"N={N}, M={20 - N}")
-    M = 20 - N
+for N in range(15, 4, -1):  # N from 15 to 5
+    print(f"N={N}, M={15 - N}")
+    M = 15 - N
     
     df = df_copy.copy()
     predictor = PullRequestPredictor(df)
