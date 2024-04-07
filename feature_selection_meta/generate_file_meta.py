@@ -65,42 +65,18 @@ def filter_data():
     df.to_csv("data/filteredData.csv", index=False)
 
 
+def generate_data_GA():
+    print('Generating data after GA feature selection...')
+    df = pd.read_csv('../data/filteredData.csv')
+    df = df[['merged_or_not', 'first_pr', 'contrib_cons', 'followers', 'account_creation_days', 'open_pr_num', 'pushed_delta', 'pr_succ_rate', 'stars', 'description_length', 'test_inclusion', 'num_code_comments', 'test_churn', 'ci_failed_perc', 'src_churn', 'files_added', 'files_deleted', 'files_changed', 'has_comments', 'num_comments', 'other_comment']]
+    df.to_csv('../data/filteredData_selected_GA.csv', index=False)
+
 def generate_data_pso():
     print("Generating data after PSO feature selection...")
-    df = pd.read_csv("data/filteredData.csv")
-    df = df[
-        [
-            "merged_or_not",
-            "first_pr",
-            "prior_review_num",
-            "core_member",
-            "contrib_cons",
-            "contrib_agree",
-            "inte_open",
-            "inte_cons",
-            "inte_agree",
-            "inte_neur",
-            "prev_pullreqs",
-            "contrib_perc_commit",
-            "sloc",
-            "team_size",
-            "open_issue_num",
-            "test_lines_per_kloc",
-            "stars",
-            "integrator_availability",
-            "test_inclusion",
-            "hash_tag",
-            "ci_exists",
-            "num_code_comments",
-            "ci_failed_perc",
-            "files_changed",
-            "friday_effect",
-            "reopen_or_not",
-            "has_comments",
-            "other_comment",
-        ]
-    ]
-    df.to_csv("data/filteredData_selected_pso.csv", index=False)
+    df = pd.read_csv('../data/filteredData.csv')
+    df = df[['merged_or_not', 'first_pr', 'prior_review_num', 'first_response_time', 'followers', 'prev_pullreqs', 'account_creation_days', 'contrib_perc_commit', 'team_size', 'open_issue_num', 'open_pr_num', 'pr_succ_rate', 'stars', 'description_length', 'lifetime_minutes', 'ci_exists', 'num_code_comments', 'ci_failed_perc', 'num_commits', 'src_churn', 'files_added', 'files_deleted', 'reopen_or_not', 'commits_on_files_touched', 'has_comments', 'num_comments', 'other_comment']]
+    df.to_csv('../data/filteredData_selected_pso.csv', index=False)
+
 
 
 if __name__ == "__main__":
