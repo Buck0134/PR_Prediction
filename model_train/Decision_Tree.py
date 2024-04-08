@@ -83,7 +83,7 @@ def train_decision_tree(data_path):
     print(f"Test Precision (Best Parameters): {precision_best}")
     print(f"Test F1 Score (Best Parameters): {f1_best}")
 
-    model_path = "featureSelected_decision_tree_model_PSO.joblib"
+    model_path = "featureSelected_decision_tree_model_Kbest.joblib"
     dump(best_model, model_path)
     print(f"Model saved to {model_path}")
 
@@ -99,4 +99,4 @@ def train_decision_tree(data_path):
     }
 
 
-train_decision_tree("./data/filteredData_selected_pso.csv")
+train_decision_tree("data/processedDataNew.csv")
