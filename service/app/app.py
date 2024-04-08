@@ -3,15 +3,26 @@ import requests  # Import the requests library
 from datetime import datetime
 import time
 import logging
+from joblib import load
 app = Flask(__name__)
 
-
-#'prior_review_num', 'first_response_time', 'inte_open', 'account_creation_days'
-#'contrib_perc_commit', 'team_size', 'open_issue_num', 'project_age', 'open_pr_num', 
-#'pr_succ_rate', 'test_lines_per_kloc', 'stars', 'integrator_availability', 'description_length', 
-#'lifetime_minutes', 'ci_latency', 'ci_failed_perc', 'commits_on_files_touched', 'num_comments', 
-#'first_pr'
-# independent: 'merged_or_not'
+# kBest:
+# ['first_response_time', : V
+# 'account_creation_days', : W
+# 'contrib_perc_commit', : F
+# 'team_size', : H
+# 'open_issue_num', : I
+# 'project_age', : U
+# 'open_pr_num', : X
+# 'pr_succ_rate', : Y
+# 'stars', : K
+# 'description_length',  : Z
+# 'lifetime_minutes', : A1
+# 'ci_latency', B1
+# 'ci_failed_perc', : O
+# 'commits_on_files_touched', : C1
+# 'num_comments', : D1
+# 'merged_or_not'] : Independent
 
 # Example route for health check
 @app.route('/health', methods=['GET'])
@@ -82,6 +93,7 @@ def predict():
     # This is where you will process the request and return predictions
     # For now, we return a simple message
     data = request.json
+    model = load('../random_forest_kBest.joblib')
     return jsonify({"message": "This is where the prediction result will be returned", "input": data}), 200
 
 
@@ -198,7 +210,7 @@ def github_full_data():
         #         name: sloc
         #         path: sloc.json
     
-    # H. team size
+    # H. team_size
     url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
     headers = {"Authorization": f"token {github_token}"}
     response = requests.get(url, headers=headers)
@@ -449,36 +461,186 @@ def github_full_data():
     else:
         print(f"Failed to fetch repository details, status code: {response.status_code}")
         finalized_data['project_age'] = "error"
-    # # API Calls and storing their whole responses
-    # # 1. Fetch Repository Details
-    # repo_response = requests.get(base_url, headers=headers)
-    # fetched_data['repo_details'] = repo_response.json() if repo_response.status_code == 200 else {"error": "Failed to fetch repository details"}
 
-    # # 2. Open Pull Requests
-    # open_prs_response = requests.get(f"{base_url}/pulls?state=open", headers=headers)
-    # fetched_data['open_prs'] = open_prs_response.json() if open_prs_response.status_code == 200 else {"error": "Failed to fetch open PRs"}
+    # V. first_response_time
+    headers = {
+        "Authorization": f"token {github_token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}"
+    timeline_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{pull_number}/timeline"
 
-    # # 3. Open Issues
-    # open_issues_response = requests.get(f"{base_url}/issues?state=open", headers=headers)
-    # fetched_data['open_issues'] = open_issues_response.json() if open_issues_response.status_code == 200 else {"error": "Failed to fetch open issues"}
+    pr_response = requests.get(pr_url, headers=headers)
+    if pr_response.status_code != 200:
+        return "Failed to fetch PR details."
+    
+    pr_created_at = datetime.strptime(pr_response.json()['created_at'], '%Y-%m-%dT%H:%M:%SZ')
 
-    # # 4. Contributors and Team Size
-    # contributors_response = requests.get(f"{base_url}/contributors", headers=headers)
-    # fetched_data['contributors'] = contributors_response.json() if contributors_response.status_code == 200 else {"error": "Failed to fetch contributors"}
+    timeline_response = requests.get(timeline_url, headers=headers)
+    if timeline_response.status_code != 200:
+        return "Failed to fetch PR timeline."
+    
+    first_response_time = None
+    for event in timeline_response.json():
+        if event['event'] in ['commented', 'reviewed']:  # Adjust as necessary
+            event_time = datetime.strptime(event['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+            if not first_response_time or event_time < first_response_time:
+                first_response_time = event_time
+    
+    if first_response_time:
+        delta = first_response_time - pr_created_at
+        finalized_data['first_response_time'] = f"{delta.total_seconds() / 60:.2f} minutes"
+    else:
+        finalized_data['first_response_time'] = "No responses found."
+    
+    # W. account_creation_days
+    url = f"https://api.github.com/users/{developer_username}"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        user_info = response.json()
+        created_at = user_info['created_at']
+        creation_date = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%SZ')
+        current_date = datetime.now()
+        account_age_days = (current_date - creation_date).days
+        finalized_data['account_creation_days'] = account_age_days
+    else:
+        finalized_data['account_creation_days'] = f"Failed to fetch user information, status code: {response.status_code}"
 
-    # # 5. Closed Pull Requests (for calculating PR success rate and first PR merged or not)
-    # closed_prs_response = requests.get(f"{base_url}/pulls?state=closed", headers=headers)
-    # fetched_data['closed_prs'] = closed_prs_response.json() if closed_prs_response.status_code == 200 else {"error": "Failed to fetch closed PRs"}
+    # X. open_pr_num
+    url = f"https://api.github.com/repos/{owner}/{repo}/pulls?state=open"
+    headers = {}
+    headers['Authorization'] = f'token {github_token}'
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        open_prs = response.json()
+        finalized_data['open_pr_num'] = len(open_prs)  # Returns the count of open PRs
+    else:
+        finalized_data['open_pr_num'] = -1
+    
+    # Y. pr_succ_rate
+    url = f"https://api.github.com/repos/{owner}/{repo}/pulls?state=closed"
+    headers = {"Authorization": f"token {github_token}"} if github_token else {}
+    prs = []
+    while url:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            prs.extend(response.json())
+            url = response.links.get('next', {}).get('url', None)  # Handle pagination
+        else:
+            return f"Failed to fetch PRs, status code: {response.status_code}"
 
-    # # 6. Workflow Runs (for CI/CD metrics)
-    # workflow_runs_response = requests.get(f"{base_url}/actions/runs", headers=headers)
-    # fetched_data['workflow_runs'] = workflow_runs_response.json()['workflow_runs'] if workflow_runs_response.status_code == 200 else {"error": "Failed to fetch workflow runs"}
+    merged_count = sum(1 for pr in prs if pr['merged_at'])
+    total_closed_count = len(prs)
 
-    # # 7. Commits (for commit activity analysis)
-    # commits_response = requests.get(f"{base_url}/commits", headers=headers)
-    # fetched_data['commits'] = commits_response.json() if commits_response.status_code == 200 else {"error": "Failed to fetch commits"}
+    if total_closed_count > 0:
+        success_rate = (merged_count / total_closed_count) * 100
+        finalized_data['open_pr_num'] =  f"{success_rate:.2f}%"
+    else:
+        finalized_data['open_pr_num'] =  "0"
 
-    # # Return the fetched data as JSON
+    # Z. description_length
+    url = f"https://api.github.com/repos/{owner}/{repo}"
+    headers = {"Authorization": f"token {github_token}"} if github_token else {}
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        repo_details = response.json()
+        description = repo_details.get('description', '')
+        if description:  # Check if the description is not None or empty
+            finalized_data['description_length'] = len(description)
+        else:
+            finalized_data['description_length'] =  "0"  # Return 0 if there is no description
+    else:
+        print(f"Failed to fetch repository details, status code: {response.status_code}")
+        finalized_data['description_length'] =  "-1"
+
+    # A1. lifetime_minutes
+    url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}"
+    headers = {"Authorization": f"token {github_token}"} if github_token else {}
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        pr_details = response.json()
+        created_at = datetime.strptime(pr_details['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+        
+        if pr_details['closed_at']:
+            closed_at = datetime.strptime(pr_details['closed_at'], '%Y-%m-%dT%H:%M:%SZ')
+            lifetime_minutes = (closed_at - created_at).total_seconds() / 60
+            finalized_data['lifetime_minutes'] = int(lifetime_minutes)
+        else:
+            finalized_data['lifetime_minutes'] = 0
+    else:
+        finalized_data['lifetime_minutes'] = -1
+
+    # B1. ci_latency
+    pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}"
+    runs_url = f"https://api.github.com/repos/{owner}/{repo}/actions/runs?event=pull_request&pull_request_number={pull_number}"
+
+    # Fetch PR creation time
+    pr_response = requests.get(pr_url, headers=headers)
+    if pr_response.status_code != 200:
+        return "Failed to fetch PR details."
+    pr_created_at = datetime.strptime(pr_response.json()['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+
+    # Fetch workflow runs
+    runs_response = requests.get(runs_url, headers=headers)
+    if runs_response.status_code != 200:
+        return "Failed to fetch workflow runs."
+    
+    runs = runs_response.json()['workflow_runs']
+    completed_runs = [run for run in runs if run['status'] == 'completed']
+    if not completed_runs:
+        return "No completed CI runs found."
+
+    # Find the earliest completed CI run
+    first_run_finished = min(completed_runs, key=lambda run: run['updated_at'])
+    first_run_finished_at = datetime.strptime(first_run_finished['updated_at'], '%Y-%m-%dT%H:%M:%SZ')
+
+    # Calculate latency
+    ci_latency = (first_run_finished_at - pr_created_at).total_seconds() / 60
+
+    finalized_data['ci_latency'] = f"{ci_latency:.2f} minutes"
+
+    # C1. commits_on_files_touched
+    pr_files_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/files"
+    files_response = requests.get(pr_files_url, headers=headers)
+    
+    if files_response.status_code != 200:
+        return "Failed to fetch PR files."
+    
+    total_commits = 0
+    for file in files_response.json():
+        commits_url = f"https://api.github.com/repos/{owner}/{repo}/commits?path={file['filename']}"
+        commits_response = requests.get(commits_url, headers=headers)
+        if commits_response.status_code == 200:
+            # Each commit in the history of the file touched by the PR
+            total_commits += len(commits_response.json())
+        else:
+            print(f"Failed to fetch commits for file: {file['filename']}")
+    
+    finalized_data['commits_on_files_touched'] = total_commits
+
+    # D1. num_comments
+    # Fetch issue comments (general PR comments)
+    issue_comments_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{pull_number}/comments"
+    issue_comments_response = requests.get(issue_comments_url, headers=headers)
+    if issue_comments_response.status_code != 200:
+        return "Failed to fetch issue comments."
+    issue_comments_count = len(issue_comments_response.json())
+    
+    # Fetch review comments (code comments)
+    review_comments_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/comments"
+    review_comments_response = requests.get(review_comments_url, headers=headers)
+    if review_comments_response.status_code != 200:
+        return "Failed to fetch review comments."
+    review_comments_count = len(review_comments_response.json())
+    
+    # Total comments
+    total_comments = issue_comments_count + review_comments_count
+    finalized_data['num_comments'] = total_comments
+
     print(finalized_data)
     return jsonify(finalized_data)
 
