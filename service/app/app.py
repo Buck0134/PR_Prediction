@@ -3,6 +3,7 @@ import requests  # Import the requests library
 from datetime import datetime
 import time
 import logging
+import numpy as np
 from joblib import load
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ app = Flask(__name__)
 # 'pr_succ_rate', : Y
 # 'stars', : K
 # 'description_length',  : Z
-# 'lifetime_minutes', : A1
+# 'lifetime_minutes', : A1 : P
 # 'ci_latency', B1
 # 'ci_failed_perc', : O
 # 'commits_on_files_touched', : C1
@@ -91,9 +92,7 @@ def github_user():
 @app.route('/predict', methods=['POST'])
 def predict():
     # This is where you will process the request and return predictions
-    # For now, we return a simple message
     data = request.json
-    model = load('../random_forest_kBest.joblib')
     return jsonify({"message": "This is where the prediction result will be returned", "input": data}), 200
 
 
@@ -182,7 +181,7 @@ def github_full_data():
                 user_commits = contributor['total']
         
         if total_commits > 0:
-            finalized_data['contrib_perc_commit'] = (user_commits / total_commits) * 100
+            finalized_data['contrib_perc_commit'] = (user_commits / total_commits)
         else:
             finalized_data['contrib_perc_commit'] = 0
     else:
@@ -456,8 +455,8 @@ def github_full_data():
         created_at = repo_details['created_at']
         created_date = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%SZ')
         current_date = datetime.now()
-        age_years = (current_date - created_date).days / 365.25
-        finalized_data['project_age'] = f"{age_years:.2f} years"
+        age_months = (current_date - created_date).days / 31
+        finalized_data['project_age'] = int(age_months)
     else:
         print(f"Failed to fetch repository details, status code: {response.status_code}")
         finalized_data['project_age'] = "error"
@@ -472,14 +471,13 @@ def github_full_data():
 
     pr_response = requests.get(pr_url, headers=headers)
     if pr_response.status_code != 200:
-        return "Failed to fetch PR details."
+        finalized_data['first_response_time'] = None
     
     pr_created_at = datetime.strptime(pr_response.json()['created_at'], '%Y-%m-%dT%H:%M:%SZ')
 
     timeline_response = requests.get(timeline_url, headers=headers)
     if timeline_response.status_code != 200:
-        return "Failed to fetch PR timeline."
-    
+        finalized_data['first_response_time'] = None
     first_response_time = None
     for event in timeline_response.json():
         if event['event'] in ['commented', 'reviewed']:  # Adjust as necessary
@@ -489,9 +487,9 @@ def github_full_data():
     
     if first_response_time:
         delta = first_response_time - pr_created_at
-        finalized_data['first_response_time'] = f"{delta.total_seconds() / 60:.2f} minutes"
+        finalized_data['first_response_time'] = delta.total_seconds() / 60
     else:
-        finalized_data['first_response_time'] = "No responses found."
+        finalized_data['first_response_time'] = None
     
     # W. account_creation_days
     url = f"https://api.github.com/users/{developer_username}"
@@ -535,10 +533,10 @@ def github_full_data():
     total_closed_count = len(prs)
 
     if total_closed_count > 0:
-        success_rate = (merged_count / total_closed_count) * 100
-        finalized_data['open_pr_num'] =  f"{success_rate:.2f}%"
+        success_rate = (merged_count / total_closed_count)
+        finalized_data['pr_succ_rate'] =  success_rate
     else:
-        finalized_data['open_pr_num'] =  "0"
+        finalized_data['pr_succ_rate'] =  None
 
     # Z. description_length
     url = f"https://api.github.com/repos/{owner}/{repo}"
@@ -551,10 +549,10 @@ def github_full_data():
         if description:  # Check if the description is not None or empty
             finalized_data['description_length'] = len(description)
         else:
-            finalized_data['description_length'] =  "0"  # Return 0 if there is no description
+            finalized_data['description_length'] =  0  # Return 0 if there is no description
     else:
         print(f"Failed to fetch repository details, status code: {response.status_code}")
-        finalized_data['description_length'] =  "-1"
+        finalized_data['description_length'] =  None
 
     # A1. lifetime_minutes
     url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}"
@@ -601,7 +599,7 @@ def github_full_data():
     # Calculate latency
     ci_latency = (first_run_finished_at - pr_created_at).total_seconds() / 60
 
-    finalized_data['ci_latency'] = f"{ci_latency:.2f} minutes"
+    finalized_data['ci_latency'] = ci_latency
 
     # C1. commits_on_files_touched
     pr_files_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/files"
@@ -642,7 +640,28 @@ def github_full_data():
     finalized_data['num_comments'] = total_comments
 
     print(finalized_data)
-    return jsonify(finalized_data)
+    kbest = ['first_response_time', 'account_creation_days', 'contrib_perc_commit', 'team_size', 'open_issue_num', 'project_age', 'open_pr_num', 'pr_succ_rate', 'stars', 'description_length', 'lifetime_minutes', 'ci_latency', 'ci_failed_perc', 'commits_on_files_touched', 'num_comments']
+    passingInResult = {}
+    for key in finalized_data:
+        if key in kbest:
+            passingInResult[key] = finalized_data[key]
+    
+    print(passingInResult)
+    model = load('../random_forest_kBest.joblib')
+    modelUsed = "random_forest_kBest"
+    for key, value in passingInResult.items():
+        if value is None:
+            passingInResult[key] = np.nan
+
+    # Convert to a 2D array (1 row, many columns)
+    X = np.array([list(passingInResult.values())])
+    predictionResult = model.predict(X)
+
+    print(predictionResult)
+    if predictionResult == 0:
+        return jsonify(f"We are using {modelUsed} model \n" + "We estimate this PR will be DENIED" )
+    else:
+        return jsonify(f"We are using {modelUsed} model \n" + "We estimate this PR will be PASSED")
 
 def get_user_review_count(github_token, developer_username):
     """
