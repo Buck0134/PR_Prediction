@@ -1,0 +1,25 @@
+Best parameters found:
+ {'alpha': 0.05, 'hidden_layer_sizes': (50, 100), 'learning_rate': 'constant'}
+/Users/liqiu/PR_Prediction/myenv/lib/python3.12/site-packages/sklearn/base.py:493: UserWarning: X does not have valid feature names, but MLPClassifier was fitted with feature names
+  warnings.warn(
+Accuracy_relu: 0.8434330418074099
+F1_relu: 0.915067727092988
+Classification Report:
+/Users/liqiu/PR_Prediction/myenv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", len(result))
+/Users/liqiu/PR_Prediction/myenv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", len(result))
+/Users/liqiu/PR_Prediction/myenv/lib/python3.12/site-packages/sklearn/metrics/_classification.py:1509: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", len(result))
+              precision    recall  f1-score   support
+
+         0.0       0.00      0.00      0.00    102668
+         1.0       0.84      1.00      0.92    553077
+
+    accuracy                           0.84    655745
+   macro avg       0.42      0.50      0.46    655745
+weighted avg       0.71      0.84      0.77    655745
+
+Confusion Matrix:
+[[     0 102668]
+ [     0 553077]]
