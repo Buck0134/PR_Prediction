@@ -12,21 +12,21 @@ results = []
 #   warnings.warn(msg)
 # Why: When N and M are too large, the model may not converge or the random effects covariance matrix may be singular.
 
-df_copy = pd.read_csv('../data/processedData.csv')
+df_copy = pd.read_csv("data/processedData.csv")
 
 for N in range(20, 9, -1):  # N from 20 to 10
     print(f"N={N}, M={20 - N}")
     M = 20 - N
-    
+
     df = df_copy.copy()
     predictor = PullRequestPredictor(df)
-    
+
     print("Processing data...")
     predictor.preprocess()
 
     print("Selecting features...")
     predictor.select_features(N, M)
-    
+
     print("Fitting and evaluating...")
     result = predictor.fit_and_evaluate()
     print(f"Result: {result}")
@@ -34,4 +34,4 @@ for N in range(20, 9, -1):  # N from 20 to 10
 
 # Save results to CSV
 result_df = pd.DataFrame(results)
-result_df.to_csv('result1.csv', index=False)
+result_df.to_csv("result1.csv", index=False)

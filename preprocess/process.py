@@ -1,11 +1,17 @@
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+
+
 class DataCleaner:
-    def __init__(self, file_path="../data/new_pullreq.csv"):
+    def __init__(self, file_path="data/new_pullreq.csv"):
         self.df = pd.read_csv(file_path)
         self.conditions = {
-            "has_comments": ["perc_pos_emotion", "perc_neg_emotion", "first_response_time"],
+            "has_comments": [
+                "perc_pos_emotion",
+                "perc_neg_emotion",
+                "first_response_time",
+            ],
             "contrib_comment": ["perc_contrib_pos_emo", "perc_contrib_neg_emo"],
             "inte_comment": ["perc_inte_neg_emo", "perc_inte_pos_emo"],
             "ci_exists": ["ci_latency", "ci_failed_perc"],
@@ -27,12 +33,12 @@ class DataCleaner:
     def df_head(self, n=5):
         pd.set_option("display.max_rows", None)
         return self.df.head(n)
-    
+
     def drop_rows_with_missing_ci_exists(self):
         initial_shape = self.df.shape
-        self.df = self.df.dropna(subset=['ci_exists'])
+        self.df = self.df.dropna(subset=["ci_exists"])
         final_shape = self.df.shape
-    
+
         # print(f"Rows dropped: {initial_shape[0] - final_shape[0]}")
         # print(f"New DataFrame shape: {final_shape}")
 
@@ -52,7 +58,11 @@ class DataCleaner:
             raise ValueError("post_condition_cols must be a list of column names")
 
         # Apply the precondition logic and update postcondition columns where necessary
-        for index, row in tqdm(self.df.iterrows(), total=len(self.df), desc=f"Processing Rows for Precondition: {pre_condition_col}"):
+        for index, row in tqdm(
+            self.df.iterrows(),
+            total=len(self.df),
+            desc=f"Processing Rows for Precondition: {pre_condition_col}",
+        ):
             if (
                 not row[pre_condition_col]
                 or row[pre_condition_col] == 0
@@ -195,11 +205,15 @@ class DataCleaner:
         self.drop_columns_with_excessive_missing_data()
         self.drop_rows_with_missing_ci_exists()
         self.pre_process()
-        for key, value in tqdm(self.conditions.items(),total=len(self.conditions.keys()), desc=f"Processing Data with pre/post conditions for data consistency..."):
+        for key, value in tqdm(
+            self.conditions.items(),
+            total=len(self.conditions.keys()),
+            desc=f"Processing Data with pre/post conditions for data consistency...",
+        ):
             self.apply_pre_post_conditions(key, value)
         return self.df
 
-    def createCSVPreProcessData(self, file_path = "../data/processedData.csv"):
+    def createCSVPreProcessData(self, file_path="data/processedData.csv"):
         self.getDFPreprocessedData()
         print("Writing to CSV File")
         self.df.to_csv(file_path, index=False)
