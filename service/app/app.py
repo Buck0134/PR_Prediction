@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import requests  # Import the requests library
 from datetime import datetime
 import time
@@ -25,7 +25,12 @@ app = Flask(__name__)
 # 'num_comments', : D1
 # 'merged_or_not'] : Independent
 
-# Example route for health check
+
+@app.route('/')
+def home():
+    return render_template('ci_setup_guide.html')
+
+# health check
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({"status": "UP"}), 200

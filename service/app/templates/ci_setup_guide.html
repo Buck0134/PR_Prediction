@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI Pipeline Setup Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        code { background-color: #f4f4f4; padding: 2px 5px; }
+        pre { background-color: #f4f4f4; padding: 10px; }
+        .team-member { margin-bottom: 20px; }
+        .team-member h4 { margin: 5px 0; }
+        .team-member p { margin: 0; }
+    </style>
+</head>
+<body>
+    <section>
+        <h1>About the PR Prediction Project</h1>
+        <p>The PR Prediction Project utilizes cutting-edge machine learning techniques to predict the likelihood of your pull request (PR) being approved. By analyzing historical data from your project's repository, including factors such as code complexity, changes made, and past PR outcomes, our model can forecast the success of new pull requests.</p>
+        
+        <h3>How It Works</h3>
+        <p>Our machine learning model has been trained on a vast dataset of pull request outcomes across various projects. It considers multiple features from each PR, including:</p>
+        <ul>
+            <li>Developer Characteristics</lili>
+            <li>Code additions and deletions</li>
+            <li>Number of files changed</li>
+            <li>Past contributor activity</li>
+            <li>Commit message contents</li>
+            <li>Current Continous Integration Set up</li>
+        </ul>
+        <p>Once a new pull request is made, our system automatically evaluates these factors and predicts whether the PR will be accepted or needs further revisions. This not only helps streamline the review process but also guides contributors in improving their submissions for a higher chance of approval.</p>
+        
+        <p>For more detailed information on setting up and using this feature in your projects, refer to the following information.</p>
+    </section>
+    
+    <h2>Setting Up PR-Prediction with Github CI Pipeline</h2>
+    <p>Follow these steps to set up the CI pipeline in your Github Repo to use our service:</p>
+
+    <h3>1. Add the CI Configuration File</h3>
+    <p>First, you need to add a configuration file named <code>pr-prediction.yml</code> to the <code>.github/workflows/</code> directory in your repository.</p>
+    <!-- Start of Github Action YML -->
+
+<pre><code>{% raw %}
+    name: PR Prediction
+    
+    on:
+      pull_request:
+        branches:
+          - main
+    
+    jobs:
+      predict:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v3
+    
+          - name: Get PR Details
+            id: pr-details
+            uses: actions/github-script@v6
+            with:
+              script: |
+                const pr = context.payload.pull_request;
+                console.log(`Pull Request Number: ${pr.number}`);
+                console.log(`Repository Name: ${context.repo.repo}`);
+                console.log(`Developer Username: ${pr.user.login}`);
+                core.setOutput("number", pr.number);
+                core.setOutput("repo", context.repo.repo);
+                core.setOutput("owner", context.repo.owner);
+                core.setOutput("developer_username", pr.user.login);
+              result-encoding: string
+    
+          - name: Call PR Prediction Service
+            env:
+              TOKEN: ${{ secrets.PR_PREDICTION_TOKEN }}
+              OWNER: ${{ steps.pr-details.outputs.owner }}
+              REPO: ${{ steps.pr-details.outputs.repo }}
+              DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
+              PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
+            run: |
+              curl -X POST https://pr-prediction.onrender.com/github/full_data \
+                   -H "Content-Type: application/json" \
+                   -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
+    {% endraw %}
+    </code></pre>
+    
+    <!-- End of Code Snappet -->    
+
+    <h3>2. Add Your GitHub Personal Access Token</h3>
+    <p>Next, add your personal GitHub token to the repository's secrets. Name this secret <code>PR_PREDICTION_TOKEN</code>. This token allows the CI to run and access necessary resources.
+        <a href="https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions" target="_blank">Visit here for more on how to use Secrets in GitHub Actions</a>
+    </p>
+
+    <h3>3. Automatic CI Execution on Pull Requests</h3>
+    <p>With the above setup, your CI pipeline will automatically run whenever a pull request is made to the <code>main</code> branch. It utilizes the GitHub token to perform actions, access repository information securely, run our machine learning model and provide you with a prediction of whether your Pull Request will be merged .</p>
+
+    <section>
+        <h2>Meet the Developers</h2>
+        <div class="team-member">
+            <h4>Bucky Yu</h4>
+        </div>
+        <div class="team-member">
+            <h4>Wenxi Yang</h4>
+        </div>
+        <div class="team-member">
+            <h4>Yuke Wu</h4>
+        </div>
+        <div class="team-member">
+            <h4>Olivia Lin</h4>
+        </div>
+        <div class="team-member">
+            <h4>Laura Li</h4>
+        </div>
+    </section>
+</body>
+</html>
