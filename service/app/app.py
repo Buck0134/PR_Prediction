@@ -103,7 +103,7 @@ def predict():
 
 @app.route('/github/full_data', methods=['POST'])
 def github_full_data():
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+    # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
     # Parse data from the request
     data = request.json
     github_token = data.get('token')
@@ -112,7 +112,7 @@ def github_full_data():
     developer_username = data.get('developer_username')
     pull_number = data.get('pull_number')
 
-    logging.info(data)
+    # logging.info(data)
 
     headers = {"Authorization": f"token {github_token}"}
     base_url = f"https://api.github.com/repos/{owner}/{repo}"
