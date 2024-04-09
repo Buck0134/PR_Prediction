@@ -93,7 +93,7 @@ def github_user():
         return jsonify({"error": "Failed to fetch user details", "status_code": response.status_code}), response.status_code
 
 
-# Placeholder prediction endpoint
+# Placeholder prediction endpoint: prediction endpoint moved to full_data
 @app.route('/predict', methods=['POST'])
 def predict():
     # This is where you will process the request and return predictions
@@ -611,7 +611,7 @@ def github_full_data():
     files_response = requests.get(pr_files_url, headers=headers)
     
     if files_response.status_code != 200:
-        return "Failed to fetch PR files."
+        finalized_data['commits_on_files_touched'] = "Failed to fetch PR files."
     
     total_commits = 0
     for file in files_response.json():
@@ -630,14 +630,14 @@ def github_full_data():
     issue_comments_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{pull_number}/comments"
     issue_comments_response = requests.get(issue_comments_url, headers=headers)
     if issue_comments_response.status_code != 200:
-        return "Failed to fetch issue comments."
+        finalized_data['num_comments'] =  "Failed to fetch issue comments."
     issue_comments_count = len(issue_comments_response.json())
     
     # Fetch review comments (code comments)
     review_comments_url = f"https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}/comments"
     review_comments_response = requests.get(review_comments_url, headers=headers)
     if review_comments_response.status_code != 200:
-        return "Failed to fetch review comments."
+        finalized_data['num_comments'] = "Failed to fetch review comments."
     review_comments_count = len(review_comments_response.json())
     
     # Total comments
@@ -664,9 +664,9 @@ def github_full_data():
 
     print(predictionResult)
     if predictionResult == 0:
-        return jsonify(f"We are using {modelUsed} model \n" + "We estimate this PR will be DENIED" )
+        return jsonify("We estimate this PR will be DENIED" )
     else:
-        return jsonify(f"We are using {modelUsed} model \n" + "We estimate this PR will be PASSED")
+        return jsonify("We estimate this PR will be PASSED")
 
 def get_user_review_count(github_token, developer_username):
     """
