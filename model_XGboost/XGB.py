@@ -35,8 +35,8 @@ def train_xgboost_model(file_path):
     start_time = time.time()
     
     parameter_grid = {
-        'max_depth': [3, 6, 9, 12],
-        'n_estimators': [100, 200, 300],
+        'max_depth': [6, 9, 12, 15],
+        'n_estimators': [100, 200, 300, 350],
         'learning_rate': [0.01, 0.2, 0.5, 0.7],
 
     }
@@ -76,6 +76,10 @@ def train_xgboost_model(file_path):
     print(f"Test Accuracy (Best Parameters): {test_accuracy_best}")
     print(f"Test Precision (Best Parameters): {precision_best}")
     print(f"Test F1 Score (Best Parameters): {f1_best}")
+
+    model_path = "_kBest.joblib"
+    dump(best_model, model_path)
+    print(f"Model saved to {model_path}")
 
 train_xgboost_model("../data/processedDataNew.csv")
 # print("============Below is result of pso:===============")
