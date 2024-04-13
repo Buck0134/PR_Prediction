@@ -1,0 +1,13 @@
+Best parameters found for XGBoost:
+ {'learning_rate': 0.2, 'max_depth': 15, 'n_estimators': 350}
+XGBoost Classifier training took 4869.859593153 seconds.
+Training Accuracy: 0.9869905421745976
+Mean CV Score: 0.8974044605569951
+Test Accuracy (Default Parameters): 0.8714399289154936
+Test Precision (Default Parameters): 0.8581501992364103
+Test F1 Score (Default Parameters): 0.8612149144630564
+=========================================================
+Test Accuracy (Best Parameters): 0.8967709008985195
+Test Precision (Best Parameters): 0.8887388898858081
+Test F1 Score (Best Parameters): 0.8891611335784672
+Model saved to xgboost_best_model_kbest.joblib
