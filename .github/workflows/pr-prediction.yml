@@ -42,6 +42,14 @@ jobs:
           DEVELOPER_USERNAME: ${{ steps.pr-details.outputs.developer_username }}
           PULL_NUMBER: ${{ steps.pr-details.outputs.number }}
         run: |
-          curl -X POST https://pr-prediction.onrender.com/github/full_data \
-               -H "Content-Type: application/json" \
-               -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
+          result=$(curl -X POST https://pr-prediction.onrender.com/github/full_data \
+              -H "Content-Type: application/json" \
+              -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}")
+          echo "PREDICTION_RESULT=${result}" >> $GITHUB_ENV
+      
+      - name: Comment PR Prediction Result
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: "Prediction result: ${{ env.PREDICTION_RESULT }}"
+          repo-token: ${{ secrets.PR_PREDICTION_TOKEN }}  # Using the new PAT
+

@@ -29,15 +29,15 @@ def get_oversample_model(file_path):
 
     return X_train_oversampled, y_train_oversampled, X_test_imputed, y_test
 
-def train_xgboost_model(file_path):
+def train_xgboost_model(file_path, model_suffix):
     X_train_oversampled, y_train_oversampled, X_test_imputed, y_test = get_oversample_model(file_path)
 
     start_time = time.time()
     
     parameter_grid = {
-        'max_depth': [3, 6, 9, 12],
-        'n_estimators': [100, 200, 300],
-        'learning_rate': [0.01, 0.2, 0.5, 0.7],
+        'max_depth': [6, 9, 12, 15],
+        'n_estimators': [200, 300, 350],
+        'learning_rate': [0.01, 0.1, 0.2, 0.5],
 
     }
 
@@ -73,11 +73,18 @@ def train_xgboost_model(file_path):
     print(f"Test Accuracy (Default Parameters): {test_accuracy_default}")
     print(f"Test Precision (Default Parameters): {precision_default}")
     print(f"Test F1 Score (Default Parameters): {f1_default}")
+    print("=========================================================")
     print(f"Test Accuracy (Best Parameters): {test_accuracy_best}")
     print(f"Test Precision (Best Parameters): {precision_best}")
     print(f"Test F1 Score (Best Parameters): {f1_best}")
 
-train_xgboost_model("../data/processedDataNew.csv")
+    model_filename = f"xgboost_best_model_{model_suffix}.joblib"
+    dump(best_model,model_filename)
+    print(f"Model saved to {model_filename}")
+
+
+# train_xgboost_model("../data/processedDataNew.csv", "kbest")
+train_xgboost_model("../data/filteredData_selected_pso.csv", "pso")
 # print("============Below is result of pso:===============")
 # train_xgboost_model("../data/filteredData_selected_pso.csv")
 # print("hello")

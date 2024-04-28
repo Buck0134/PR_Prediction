@@ -10,21 +10,29 @@ from imblearn.over_sampling import SMOTE
 from joblib import dump
 import time
 
-def train_mlp_model(file_path):
+def get_oversample_model(file_path):
     df = pd.read_csv(file_path)
     # Split data into features and target
     X = df.drop('merged_or_not', axis=1)
     y = df['merged_or_not']
 
-    start_time = time.time()
     smote = SMOTE(random_state=42)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42, stratify=y)
 
     imputer = SimpleImputer(strategy='mean')
     X_train_imputed = pd.DataFrame(imputer.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
     X_test_imputed = pd.DataFrame(imputer.transform(X_test), columns=X_test.columns, index=X_test.index)
     X_train_oversampled, y_train_oversampled = smote.fit_resample(X_train_imputed, y_train)
+
+    return X_train_oversampled, y_train_oversampled, X_test_imputed, y_test
+
+
+
+def train_mlp_model(file_path):
+    X_train_oversampled, y_train_oversampled, X_test_imputed, y_test = get_oversample_model(file_path)
+
+    start_time = time.time()
 
     parameter_grid = {
     'hidden_layer_sizes': [(30, 80), (50,100), (70,120)],
@@ -73,7 +81,7 @@ def train_mlp_model(file_path):
     # print(f"Model saved to {model_path}")
 
 
-train_mlp_model("../data/processedDataNew.csv")
+train_mlp_model("data/processedDataNew.csv")
 
 
 # ==============================================================
