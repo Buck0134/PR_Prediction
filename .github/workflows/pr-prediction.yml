@@ -45,3 +45,17 @@ jobs:
           curl -X POST https://pr-prediction.onrender.com/github/full_data \
                -H "Content-Type: application/json" \
                -d "{\"token\": \"${TOKEN}\", \"owner\": \"${OWNER}\", \"repo\": \"${REPO}\", \"developer_username\": \"${DEVELOPER_USERNAME}\", \"pull_number\": \"${PULL_NUMBER}\"}"
+               echo "PREDICTION_RESULT=$result" >> $GITHUB_ENV
+
+      - name: Comment PR Prediction Result
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const predictionResult = process.env.PREDICTION_RESULT;
+            github.rest.issues.createComment({
+              owner: '${{ steps.pr-details.outputs.owner }}',
+              repo: '${{ steps.pr-details.outputs.repo }}',
+              issue_number: ${{ steps.pr-details.outputs.number }},
+              body: `Prediction result: ${predictionResult}`
+            });
