@@ -1,0 +1,250 @@
+Loading dataset from ../../data/filteredData.csv
+Finished loading data
+Split finished
+merge_distribution: {'Not Merged': 514626, 'Merged': 2764098}
+Running genetic algorithm for run 1
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 1: Generations:   0%|          | 0/5 [00:00<?, ?it/s]Run 1: Generations:  20%|██        | 1/5 [23:40<1:34:40, 1420.14s/it]Run 1: Generations:  40%|████      | 2/5 [1:08:48<1:48:53, 2177.98s/it]Run 1: Generations:  60%|██████    | 3/5 [1:33:57<1:02:25, 1872.53s/it]Run 1: Generations:  80%|████████  | 4/5 [2:20:02<37:04, 2224.94s/it]  Run 1: Generations: 100%|██████████| 5/5 [2:42:46<00:00, 1914.35s/it]Run 1: Generations: 100%|██████████| 5/5 [2:42:46<00:00, 1953.30s/it]
+Generation 1/5 processing...
+Generation 2/5 processing...
+Generation 3/5 processing...
+Generation 4/5 processing...
+Generation 5/5 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 1: ['project_id', 'prior_review_num', 'first_response_time', 'contrib_open', 'contrib_extra', 'inte_open', 'inte_cons', 'inte_neur', 'followers', 'account_creation_days', 'contrib_perc_commit', 'sloc', 'open_issue_num', 'project_age', 'test_lines_per_kloc', 'stars', 'description_length', 'ci_exists', 'ci_latency', 'num_code_comments', 'test_churn', 'ci_failed_perc', 'num_commits', 'files_deleted', 'friday_effect', 'commits_on_files_touched', 'num_comments', 'other_comment']
+Running genetic algorithm for run 2
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 2: Generations:   0%|          | 0/10 [00:00<?, ?it/s]Run 2: Generations:  10%|█         | 1/10 [26:12<3:55:51, 1572.34s/it]Run 2: Generations:  20%|██        | 2/10 [1:08:20<4:44:37, 2134.74s/it]Run 2: Generations:  30%|███       | 3/10 [1:32:44<3:33:16, 1828.13s/it]Run 2: Generations:  40%|████      | 4/10 [1:58:38<2:52:01, 1720.26s/it]Run 2: Generations:  50%|█████     | 5/10 [2:40:52<2:47:47, 2013.40s/it]Run 2: Generations:  60%|██████    | 6/10 [3:04:26<2:00:38, 1809.69s/it]Run 2: Generations:  70%|███████   | 7/10 [3:30:22<1:26:20, 1726.77s/it]Run 2: Generations:  80%|████████  | 8/10 [3:55:57<55:31, 1665.80s/it]  Run 2: Generations:  90%|█████████ | 9/10 [4:21:02<26:55, 1615.34s/it]Run 2: Generations: 100%|██████████| 10/10 [4:54:27<00:00, 1735.70s/it]Run 2: Generations: 100%|██████████| 10/10 [4:54:27<00:00, 1766.73s/it]
+Generation 1/10 processing...
+Generation 2/10 processing...
+Generation 3/10 processing...
+Generation 4/10 processing...
+Generation 5/10 processing...
+Generation 6/10 processing...
+Generation 7/10 processing...
+Generation 8/10 processing...
+Generation 9/10 processing...
+Generation 10/10 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 2: ['first_pr', 'prior_review_num', 'first_response_time', 'contrib_open', 'contrib_cons', 'contrib_agree', 'inte_open', 'inte_agree', 'inte_neur', 'followers', 'account_creation_days', 'team_size', 'project_age', 'pushed_delta', 'pr_succ_rate', 'test_lines_per_kloc', 'comment_conflict', 'hash_tag', 'ci_latency', 'num_code_comments', 'test_churn', 'ci_failed_perc', 'src_churn', 'files_added', 'files_deleted', 'friday_effect', 'reopen_or_not']
+Running genetic algorithm for run 3
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 3: Generations:   0%|          | 0/15 [00:00<?, ?it/s]Run 3: Generations:   7%|▋         | 1/15 [38:43<9:02:12, 2323.78s/it]Run 3: Generations:  13%|█▎        | 2/15 [1:03:13<6:34:36, 1821.25s/it]Run 3: Generations:  20%|██        | 3/15 [1:27:13<5:29:28, 1647.39s/it]Run 3: Generations:  27%|██▋       | 4/15 [2:15:51<6:33:56, 2148.75s/it]Run 3: Generations:  33%|███▎      | 5/15 [2:41:52<5:22:50, 1937.00s/it]Run 3: Generations:  40%|████      | 6/15 [3:05:57<4:25:26, 1769.63s/it]Run 3: Generations:  47%|████▋     | 7/15 [3:30:43<3:43:36, 1677.05s/it]Run 3: Generations:  53%|█████▎    | 8/15 [3:53:32<3:04:11, 1578.77s/it]Run 3: Generations:  60%|██████    | 9/15 [4:18:55<2:36:09, 1561.59s/it]Run 3: Generations:  67%|██████▋   | 10/15 [4:44:03<2:08:43, 1544.77s/it]Run 3: Generations:  73%|███████▎  | 11/15 [5:08:00<1:40:47, 1511.84s/it]Run 3: Generations:  80%|████████  | 12/15 [5:31:57<1:14:27, 1489.02s/it]Run 3: Generations:  87%|████████▋ | 13/15 [5:53:16<47:31, 1425.63s/it]  Run 3: Generations:  93%|█████████▎| 14/15 [6:18:06<24:05, 1445.12s/it]Run 3: Generations: 100%|██████████| 15/15 [6:40:39<00:00, 1417.25s/it]Run 3: Generations: 100%|██████████| 15/15 [6:40:39<00:00, 1602.64s/it]
+Generation 1/15 processing...
+Generation 2/15 processing...
+Generation 3/15 processing...
+Generation 4/15 processing...
+Generation 5/15 processing...
+Generation 6/15 processing...
+Generation 7/15 processing...
+Generation 8/15 processing...
+Generation 9/15 processing...
+Generation 10/15 processing...
+Generation 11/15 processing...
+Generation 12/15 processing...
+Generation 13/15 processing...
+Generation 14/15 processing...
+Generation 15/15 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 3: ['project_id', 'first_pr', 'prior_review_num', 'contrib_cons', 'contrib_agree', 'contrib_neur', 'inte_agree', 'inte_neur', 'contrib_perc_commit', 'project_age', 'open_pr_num', 'pr_succ_rate', 'test_lines_per_kloc', 'stars', 'integrator_availability', 'test_inclusion', 'comment_conflict', 'ci_latency', 'num_commits', 'files_added', 'files_deleted', 'friday_effect', 'commits_on_files_touched', 'num_comments', 'other_comment']
+Avg_features: 26.6667
+Avg_fitness: 0.8556
+Avg_time: 18634.8892
+Avg_feature_selection_time: 1572.9063
+Avg_generations: 10.0000
+Avg_accuracy: 0.8506
+Avg_precision: 0.9153
+Avg_recall: 0.9068
+Avg_f1: 0.9110
+=====================================================
+Loading dataset from ../../data/filteredData.csv
+Finished loading data
+Split finished
+merge_distribution: {'Not Merged': 514626, 'Merged': 2764098}
+Running genetic algorithm for run 1
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 1: Generations:   0%|          | 0/5 [00:00<?, ?it/s]Run 1: Generations:  20%|██        | 1/5 [13:44<54:58, 824.52s/it]Run 1: Generations:  40%|████      | 2/5 [27:31<41:17, 825.90s/it]Run 1: Generations:  60%|██████    | 3/5 [42:06<28:17, 848.57s/it]Run 1: Generations:  80%|████████  | 4/5 [55:49<13:58, 838.34s/it]Run 1: Generations: 100%|██████████| 5/5 [1:09:17<00:00, 827.46s/it]Run 1: Generations: 100%|██████████| 5/5 [1:09:17<00:00, 831.55s/it]
+Generation 1/5 processing...
+Generation 2/5 processing...
+Generation 3/5 processing...
+Generation 4/5 processing...
+Generation 5/5 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 1: ['first_pr', 'prior_review_num', 'followers', 'prev_pullreqs', 'contrib_perc_commit', 'team_size', 'pr_succ_rate', 'description_length', 'test_inclusion', 'lifetime_minutes', 'ci_exists', 'num_code_comments', 'ci_failed_perc', 'num_commits', 'src_churn', 'friday_effect', 'reopen_or_not', 'has_comments', 'num_comments']
+Running genetic algorithm for run 2
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 2: Generations:   0%|          | 0/10 [00:00<?, ?it/s]Run 2: Generations:  10%|█         | 1/10 [12:56<1:56:29, 776.65s/it]Run 2: Generations:  20%|██        | 2/10 [26:26<1:46:07, 795.96s/it]Run 2: Generations:  30%|███       | 3/10 [42:04<1:40:27, 861.07s/it]Run 2: Generations:  40%|████      | 4/10 [55:25<1:23:44, 837.43s/it]Run 2: Generations:  50%|█████     | 5/10 [1:09:11<1:09:26, 833.24s/it]Run 2: Generations:  60%|██████    | 6/10 [1:22:35<54:53, 823.40s/it]  Run 2: Generations:  70%|███████   | 7/10 [1:36:59<41:50, 836.68s/it]Run 2: Generations:  80%|████████  | 8/10 [1:50:47<27:47, 833.62s/it]Run 2: Generations:  90%|█████████ | 9/10 [2:03:52<13:38, 818.59s/it]Run 2: Generations: 100%|██████████| 10/10 [2:16:44<00:00, 804.19s/it]Run 2: Generations: 100%|██████████| 10/10 [2:16:44<00:00, 820.46s/it]
+Generation 1/10 processing...
+Generation 2/10 processing...
+Generation 3/10 processing...
+Generation 4/10 processing...
+Generation 5/10 processing...
+Generation 6/10 processing...
+Generation 7/10 processing...
+Generation 8/10 processing...
+Generation 9/10 processing...
+Generation 10/10 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 2: ['first_pr', 'first_response_time', 'contrib_cons', 'prev_pullreqs', 'account_creation_days', 'contrib_perc_commit', 'open_issue_num', 'pr_succ_rate', 'hash_tag', 'test_churn', 'ci_failed_perc', 'num_commits', 'src_churn', 'num_comments']
+Running genetic algorithm for run 3
+Creating initial population...
+Creating individual 1 of 20
+Creating individual 2 of 20
+Creating individual 3 of 20
+Creating individual 4 of 20
+Creating individual 5 of 20
+Creating individual 6 of 20
+Creating individual 7 of 20
+Creating individual 8 of 20
+Creating individual 9 of 20
+Creating individual 10 of 20
+Creating individual 11 of 20
+Creating individual 12 of 20
+Creating individual 13 of 20
+Creating individual 14 of 20
+Creating individual 15 of 20
+Creating individual 16 of 20
+Creating individual 17 of 20
+Creating individual 18 of 20
+Creating individual 19 of 20
+Creating individual 20 of 20
+Initial population of size 20 created.
+Run 3: Generations:   0%|          | 0/15 [00:00<?, ?it/s]Run 3: Generations:   7%|▋         | 1/15 [13:36<3:10:36, 816.86s/it]Run 3: Generations:  13%|█▎        | 2/15 [26:51<2:54:12, 804.03s/it]Run 3: Generations:  20%|██        | 3/15 [39:13<2:35:06, 775.52s/it]Run 3: Generations:  27%|██▋       | 4/15 [52:59<2:25:50, 795.51s/it]Run 3: Generations:  33%|███▎      | 5/15 [1:06:34<2:13:43, 802.37s/it]Run 3: Generations:  40%|████      | 6/15 [1:20:30<2:02:05, 813.92s/it]Run 3: Generations:  47%|████▋     | 7/15 [1:34:28<1:49:34, 821.77s/it]Run 3: Generations:  53%|█████▎    | 8/15 [1:49:22<1:38:34, 844.90s/it]Run 3: Generations:  60%|██████    | 9/15 [2:04:50<1:27:04, 870.77s/it]Run 3: Generations:  67%|██████▋   | 10/15 [2:20:51<1:14:53, 898.75s/it]Run 3: Generations:  73%|███████▎  | 11/15 [2:37:59<1:02:32, 938.17s/it]Run 3: Generations:  80%|████████  | 12/15 [2:51:00<44:31, 890.41s/it]  Run 3: Generations:  87%|████████▋ | 13/15 [3:04:47<29:02, 871.28s/it]Run 3: Generations:  93%|█████████▎| 14/15 [3:32:03<18:22, 1102.00s/it]Run 3: Generations: 100%|██████████| 15/15 [3:43:45<00:00, 981.47s/it] Run 3: Generations: 100%|██████████| 15/15 [3:43:45<00:00, 895.01s/it]
+Generation 1/15 processing...
+Generation 2/15 processing...
+Generation 3/15 processing...
+Generation 4/15 processing...
+Generation 5/15 processing...
+Generation 6/15 processing...
+Generation 7/15 processing...
+Generation 8/15 processing...
+Generation 9/15 processing...
+Generation 10/15 processing...
+Generation 11/15 processing...
+Generation 12/15 processing...
+Generation 13/15 processing...
+Generation 14/15 processing...
+Generation 15/15 processing...
+Genetic algorithm finished. Evaluating best individual...
+genetic algo finished
+Selected features for run 3: ['first_pr', 'contrib_cons', 'followers', 'account_creation_days', 'open_pr_num', 'pushed_delta', 'pr_succ_rate', 'stars', 'description_length', 'test_inclusion', 'num_code_comments', 'test_churn', 'ci_failed_perc', 'src_churn', 'files_added', 'files_deleted', 'files_changed', 'has_comments', 'num_comments', 'other_comment']
+Avg_features: 17.6667
+Avg_fitness: 0.8465
+Avg_time: 9429.4762
+Avg_feature_selection_time: 759.8996
+Avg_generations: 10.0000
+Avg_accuracy: 0.8245
+Avg_precision: 0.9007
+Avg_recall: 0.8901
+Avg_f1: 0.8953
+=====================================================
