@@ -22,7 +22,6 @@ def train_random_forest(train_data_path, test_data_path):
 
     random_classic = RandomForestClassifier(n_estimators=20, min_samples_leaf=60)
     cv_scores = cross_val_score(
-        ?
         random_classic, X_train, y_train, cv=2, scoring="accuracy", n_jobs=-1
     )
 
