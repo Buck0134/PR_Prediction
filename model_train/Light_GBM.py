@@ -1,22 +1,23 @@
 from lightgbm import LGBMClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, f1_score
 import pandas as pd
-import numpy as np
 import time
 from joblib import dump
 
 
-def train_lightgbm(data_path):
-    data = pd.read_csv(data_path)
-    X = data.drop("merged_or_not", axis=1)
-    y = data["merged_or_not"]
+def train_lightgbm(train_data_path, test_data_path):
+    # Load training data
+    train_data = pd.read_csv(train_data_path)
+    X_train = train_data.drop("merged_or_not", axis=1)
+    y_train = train_data["merged_or_not"]
+
+    # Load test data
+    test_data = pd.read_csv(test_data_path)
+    X_test = test_data.drop("merged_or_not", axis=1)
+    y_test = test_data["merged_or_not"]
 
     start_time = time.time()
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.15, random_state=42
-    )
 
     lgbm_model = LGBMClassifier(n_estimators=100, learning_rate=0.1)
 
@@ -41,10 +42,10 @@ def train_lightgbm(data_path):
 
     grid_search.fit(X_train, y_train)
 
-    #  best model from grid search
+    # Best model from grid search
     best_model = grid_search.best_estimator_
 
-    #  training accuracy
+    # Training accuracy
     y_train_pred = best_model.predict(X_train)
     training_accuracy = accuracy_score(y_train, y_train_pred)
 
@@ -76,4 +77,4 @@ def train_lightgbm(data_path):
     print(f"Model saved to {model_path}")
 
 
-train_lightgbm("data/filteredData_selected_pso.csv")
+train_lightgbm("data/processedDataNew.csv", "data/processedDataNew_test.csv")
