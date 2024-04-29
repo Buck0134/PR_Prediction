@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-
+from sklearn.model_selection import train_test_split
 
 class DataCleaner:
-    def __init__(self, file_path="data/new_pullreq.csv"):
-        self.df = pd.read_csv(file_path)
+    def __init__(self, df):
+        self.df = df
         self.conditions = {
             "has_comments": [
                 "perc_pos_emotion",
@@ -202,7 +202,7 @@ class DataCleaner:
             )
 
     def getDFPreprocessedData(self):
-        self.drop_columns_with_excessive_missing_data()
+        # self.drop_columns_with_excessive_missing_data()
         self.drop_rows_with_missing_ci_exists()
         self.pre_process()
         for key, value in tqdm(
@@ -213,22 +213,21 @@ class DataCleaner:
             self.apply_pre_post_conditions(key, value)
         return self.df
 
-    def createCSVPreProcessData(self, file_path="data/processedData.csv"):
+    def createCSVPreProcessData(self, file_path):
         self.getDFPreprocessedData()
-        print("Writing to CSV File")
+        # Saving the training dataset
         self.df.to_csv(file_path, index=False)
         print(f"DataFrame exported to {file_path}.")
-        print("\n")
 
 
 # Example usage:
-cleaner = DataCleaner()
+# cleaner = DataCleaner()
 
 # to return processed dataframe
 # cleaner.getDFPreprocessedData()
 
 # to save the processed data in a CSV
-cleaner.createCSVPreProcessData()
+# cleaner.createCSVPreProcessData()
 
 
 # # false_count = (cleaner.df["has_comments"] == False).sum()
@@ -255,3 +254,16 @@ cleaner.createCSVPreProcessData()
 # print("After")
 # # print(cleaner.df_head())
 # print(cleaner.display_missing_data_percentage())
+
+file_path="../data/new_pullreq.csv"
+raw_df = pd.read_csv(file_path)
+cleaner = DataCleaner(raw_df)
+
+cleaner.drop_columns_with_excessive_missing_data()
+train_df, test_df = train_test_split(cleaner.df, test_size=0.2, random_state=42)
+# print("shapes of dfs", train_df.shape, test_df.shape)
+
+cleanerTrain = DataCleaner(train_df)
+cleanerTest = DataCleaner(test_df)
+cleanerTrain.createCSVPreProcessData(file_path = "../data/processedData.csv")
+cleanerTest.createCSVPreProcessData(file_path = "../data/processedData_test.csv")
