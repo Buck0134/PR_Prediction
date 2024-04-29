@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-
+from sklearn.model_selection import train_test_split
 
 class DataCleaner:
     def __init__(self, file_path="data/new_pullreq.csv"):
@@ -213,11 +213,21 @@ class DataCleaner:
             self.apply_pre_post_conditions(key, value)
         return self.df
 
-    def createCSVPreProcessData(self, file_path="data/processedData.csv"):
+    def createCSVPreProcessData(self, file_path="data/processedData.csv", test_size=0.2):
         self.getDFPreprocessedData()
-        print("Writing to CSV File")
-        self.df.to_csv(file_path, index=False)
-        print(f"DataFrame exported to {file_path}.")
+        
+        # Splitting the data into training and testing sets
+        train_df, test_df = train_test_split(self.df, test_size=test_size, random_state=42)
+        
+        # Saving the training dataset
+        train_file_path = file_path
+        train_df.to_csv(train_file_path, index=False)
+        print(f"Training DataFrame exported to {train_file_path}.")
+    
+        # Saving the testing dataset
+        test_file_path = file_path.replace('.csv', '_test.csv')
+        test_df.to_csv(test_file_path, index=False)
+        print(f"Testing DataFrame exported to {test_file_path}.")
         print("\n")
 
 
