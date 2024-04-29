@@ -13,17 +13,17 @@ def train_decision_tree(train_data_path, test_data_path):
     # print(data.columns)
 
     # Prepare the feature matrix X and target vector y
-    train_data = pd.read_csv(train_data_path) 
+    train_data = pd.read_csv(train_data_path)
     X_train = train_data.drop("merged_or_not", axis=1)
     y_train = train_data["merged_or_not"]
     # X = data.drop("merged_or_not", axis=1)
     # y = data["merged_or_not"]
 
-    test_data = pd.read_csv(test_data_path) 
+    test_data = pd.read_csv(test_data_path)
     X_test = test_data.drop("merged_or_not", axis=1)
     y_test = test_data["merged_or_not"]
 
-    categorical_columns = X_train.select_dtypes(include=['object', 'category']).columns
+    categorical_columns = X_train.select_dtypes(include=["object", "category"]).columns
 
     X_train = X_train.drop(categorical_columns, axis=1)
     X_test = X_test.drop(categorical_columns, axis=1)
@@ -114,4 +114,4 @@ def train_decision_tree(train_data_path, test_data_path):
     }
 
 
-train_decision_tree("data/processedData.csv", "data/processedData_test.csv")
+train_decision_tree("data/processedDataNew.csv", "data/processedData_test.csv")

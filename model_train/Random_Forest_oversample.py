@@ -1,23 +1,22 @@
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.model_selection import GridSearchCV, cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, f1_score
 from imblearn.over_sampling import SMOTE
-import numpy as np
 import pandas as pd
 import time
 from joblib import dump
 
 
-def train_random_forest(data_path):
-    data = pd.read_csv(data_path)
+def train_random_forest(train_data_path, test_data_path):
+    # Load training data
+    train_data = pd.read_csv(train_data_path)
+    X_train = train_data.drop("merged_or_not", axis=1)
+    y_train = train_data["merged_or_not"]
 
-    X = data.drop("merged_or_not", axis=1)
-    y = data["merged_or_not"]
-
-    # Split data
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.15, random_state=42, stratify=y
-    )
+    # Load test data
+    test_data = pd.read_csv(test_data_path)
+    X_test = test_data.drop("merged_or_not", axis=1)
+    y_test = test_data["merged_or_not"]
 
     # Apply SMOTE
     smote = SMOTE(random_state=42)
@@ -85,4 +84,4 @@ def train_random_forest(data_path):
     print(f"Model saved to {model_path}")
 
 
-train_random_forest("data/filteredData_selected_pso.csv")
+train_random_forest("data/processedDataNew.csv", "data/processedDataNew_test.csv")
