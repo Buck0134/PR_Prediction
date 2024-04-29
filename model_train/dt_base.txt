@@ -1,0 +1,15 @@
+Categorical columns:
+Index(['last_close_time', 'contrib_gender', 'contrib_country',
+       'contrib_first_emo', 'language', 'ci_first_build_status',
+       'ci_last_build_status'],
+      dtype='object')
+Decision Tree training took 1098.6536719799042 seconds.
+Training Accuracy: 0.9998006054274974
+Mean CV Score: 0.8687396585145698
+Test Accuracy (Default Parameters): 0.8706250838690789
+Test Precision (Default Parameters): 0.9249700403094019
+Test F1 Score (Default Parameters): 0.9231279413017203
+Test Accuracy (Best Parameters): 0.8969188025325412
+Test Precision (Best Parameters): 0.9164134181937363
+Test F1 Score (Best Parameters): 0.9404780668117169
+Model saved to decision_tree_base.joblib
